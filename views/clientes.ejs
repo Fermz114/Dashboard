@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <%- include('partials/head') %>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="mb-4">Clientes Registrados</h1>
+    
+    <!-- Barra de búsqueda -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <input type="text" id="busqueda" class="form-control" placeholder="Buscar cliente...">
+      </div>
+    </div>
+
+    <% if (clientes.length > 0) { %>
+      <table id="tablaClientes" class="table table-hover">
+        <thead class="bg-info text-white">
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+            <th>Registro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% clientes.forEach(cliente => { %>
+            <tr>
+              <td><%= cliente.nombre %></td>
+              <td><a href="mailto:<%= cliente.email %>"><%= cliente.email %></a></td>
+              <td><%= helpers.formatoTelefono(cliente.telefono) %></td>
+              <td><%= cliente.direccion_completa %></td>
+              <td><%= new Date(cliente.fecha_registro).toLocaleDateString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="alert alert-warning">No hay clientes registrados</div>
+    <% } %>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Inicializar DataTable
+      $('#tablaClientes').DataTable({
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-MX.json'
+        }
+      });
+
+      // Búsqueda en tiempo real
+      $('#busqueda').on('input', function() {
+        $.get('/clientes/buscar', { termino: $(this).val() }, function(data) {
+          // Actualizar tabla con resultados
+        });
+      });
+    });
+  </script>
+</body>
+</html>
