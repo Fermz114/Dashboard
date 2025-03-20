@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<%- include('../partials/head') %>
+<body>
+  <div class="container mt-4">
+    <h1>Dashboard de Inventario</h1>
+    <h1>Bienvenido <%= user.username %> (Gerente)</h1>
+
+    <!-- Selector de Juego -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <select id="selectorJuego" class="form-select">
+          <% games.forEach(game => { %>
+            <option value="<%= game._id %>"><%= game.titulo %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+
+    <!-- Tarjetas de Stock -->
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card bg-info text-white">
+          <div class="card-body">
+            <h5>Stock Físico</h5>
+            <h2 id="stockFisico">0</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <h5>Disponibilidad Digital</h5>
+            <h2 id="stockDigital">Siempre</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Actualización dinámica al seleccionar juego
+    document.getElementById('selectorJuego').addEventListener('change', async (e) => {
+      const response = await fetch(`/inventario/${e.target.value}`);
+      const data = await response.json();
+      
+      document.getElementById('stockFisico').textContent = data.stock.fisico;
+      document.getElementById('stockDigital').textContent = 
+        data.stock.digital ? 'Disponible' : 'No disponible';
+    });
+  </script>
+</body>
+</html>

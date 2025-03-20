@@ -6,7 +6,7 @@ const { check, validationResult } = require('express-validator');
 
 // Registro
 router.get('/register', (req, res) => {
-    res.render('register', { roles: ['cliente', 'vendedor', 'gerente'] });
+    res.render('register', { roles: ['cliente', 'vendedor', 'gerente'], title: 'Registro' , errors: null,  error: null });
 });
 
 router.post('/register', [
@@ -17,8 +17,9 @@ router.post('/register', [
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('auth/register', { 
+        return res.render('register', { 
             errors: errors.array(),
+            title: 'Registro',
             roles: ['cliente', 'vendedor', 'gerente'] 
         });
     }
@@ -35,6 +36,7 @@ router.post('/register', [
     } catch (error) {
         res.render('register', { 
             error: 'Error al registrar usuario',
+            title: 'Registro',
             roles: ['cliente', 'vendedor', 'gerente'] 
         });
     }
@@ -42,7 +44,7 @@ router.post('/register', [
 
 // Login
 router.get('/login', (req, res) => {
-    res.render('login');
+    res.render('login', { title: 'Iniciar Sesión', error: null });
 });
 
 router.post('/login', async (req, res) => {
