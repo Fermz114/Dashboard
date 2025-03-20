@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<%- include('partials/head', {title: title}) %>
+<body>
+  <%- include('partials/navbar') %>
+  
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-8">
+        <!-- Tarjeta principal del juego -->
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h2 class="mb-0"><%= game.titulo %></h2>
+          </div>
+          <div class="card-body">
+            <% if (game.imagenUrl) { %>
+              <img src="<%= game.imagenUrl %>" class="img-fluid mb-4" alt="Portada del juego">
+            <% } %>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <h4>📀 Plataformas</h4>
+                <ul class="list-group">
+                  <% game.plataformas.forEach(plataforma => { %>
+                    <li class="list-group-item"><%= plataforma %></li>
+                  <% }) %>
+                </ul>
+              </div>
+              
+              <div class="col-md-6">
+                <h4>📊 Metadatos</h4>
+                <dl class="row">
+                  <% if (game.metadatos?.metacritic) { %>
+                    <dt class="col-sm-6">Puntuación Metacritic:</dt>
+                    <dd class="col-sm-6"><%= game.metadatos.metacritic %></dd>
+                  <% } %>
+                  
+                  <% if (game.metadatos?.lanzamiento) { %>
+                    <dt class="col-sm-6">Fecha de Lanzamiento:</dt>
+                    <dd class="col-sm-6"><%= formatDate(game.metadatos.lanzamiento) %></dd>
+                  <% } %>
+                  
+                  <% if (game.metadatos?.desarrollador) { %>
+                    <dt class="col-sm-6">Desarrollador:</dt>
+                    <dd class="col-sm-6"><%= game.metadatos.desarrollador %></dd>
+                  <% } %>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <!-- Panel de inventario -->
+        <div class="card mb-4">
+          <div class="card-header bg-info text-white">
+            <h5 class="mb-0">📦 Disponibilidad Física</h5>
+          </div>
+          <div class="card-body">
+            <% if (inventory) { %>
+              <ul class="list-group">
+                <li class="list-group-item">
+                  Stock Actual: <span class="badge bg-primary"><%= inventory.stock %></span>
+                </li>
+                <li class="list-group-item">
+                  Ubicación: <%= inventory.ubicacion || 'No especificada' %>
+                </li>
+                <li class="list-group-item">
+                  Última Actualización: <%= formatDate(inventory.ultima_actualizacion) %>
+                </li>
+              </ul>
+            <% } else { %>
+              <div class="alert alert-warning">
+                Este juego no está disponible en formato físico
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Requisitos PC -->
+        <% if (game.requisitosPC) { %>
+          <div class="card">
+            <div class="card-header bg-success text-white">
+              <h5 class="mb-0">🖥️ Requisitos PC</h5>
+            </div>
+            <div class="card-body">
+              <dl class="row">
+                <dt class="col-sm-5">Sistema Operativo:</dt>
+                <dd class="col-sm-7"><%= game.requisitosPC.os %></dd>
+                
+                <dt class="col-sm-5">Procesador:</dt>
+                <dd class="col-sm-7"><%= game.requisitosPC.procesador %></dd>
+                
+                <dt class="col-sm-5">Memoria RAM:</dt>
+                <dd class="col-sm-7"><%= game.requisitosPC.ram %></dd>
+                
+                <dt class="col-sm-5">Tarjeta Gráfica:</dt>
+                <dd class="col-sm-7"><%= game.requisitosPC.gpu %></dd>
+                
+                <dt class="col-sm-5">Almacenamiento:</dt>
+                <dd class="col-sm-7"><%= game.requisitosPC.almacenamiento %></dd>
+              </dl>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+</body>
+</html>

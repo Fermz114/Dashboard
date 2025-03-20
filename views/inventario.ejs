@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<%- include('partials/head', {title: 'Gestión de Inventario'}) %>
+<body>
+  <%- include('partials/navbar') %>
+  
+  <div class="container mt-4">
+    <h1 class="mb-4">📦 Inventario Físico</h1>
+    
+    <div class="row">
+      <div class="col-md-8">
+        <table class="table table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Juego</th>
+              <th>Plataformas</th>
+              <th>Stock</th>
+              <th>Ubicación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% inventario.forEach(item => { %>
+              <tr>
+                <td><%= item.titulo %></td>
+                <td><%= item.plataformas.join(', ') %></td>
+                <td class="<%= item.stock < 5 ? 'text-danger fw-bold' : '' %>">
+                  <%= item.stock %>
+                </td>
+                <td><%= item.ubicacion %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Acciones Rápidas</h5>
+            <a href="/inventario/nuevo" class="btn btn-primary mb-2">➕ Nuevo Producto</a>
+            <button class="btn btn-warning mb-2">🔄 Actualizar Stock</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
