@@ -59,3 +59,38 @@
     margin: 20px 0;
     border-radius: 5px;
   }
+
+
+/* Side bar */
+  
+.side-menu {
+  position: fixed;
+  background: #3498db;
+  width: 20vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.side-menu .brand-name {
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.side-menu li {
+  font-size: 24px;
+  padding: 10px 40px;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+.side-menu li:hover {
+  background: white;
+  color: #2c2e50;
+}
+/* Ajustar el contenido principal para que no se superponga con el sidebar */
+.main-content {
+  margin-left: 20vw;  /* Espacio para el sidebar */
+  padding: 20px;
+  width: calc(100% - 20vw); /* Ajustar al resto de la pantalla */
+}
