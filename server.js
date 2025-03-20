@@ -1,10 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const session = require('express-session');
 const path = require('path');
 const morgan = require('morgan');
 const { mysqlPool } = require('./config/db'); 
 const expressLayouts = require('express-ejs-layouts');
+const MySQLStore = require('express-mysql-session')(session);
 
 const app = express();
 
@@ -30,16 +32,59 @@ mysqlPool.getConnection()
   })
   .catch(err => console.error('❌ Error MySQL:', err));
 
+  // Configuración de sesión
+const sessionStore = new MySQLStore({
+  clearExpired: true,
+  checkExpirationInterval: 900000,
+  expiration: 86400000,
+  createDatabaseTable: true,
+  schema: {
+      tableName: 'sessions',
+      columnNames: {
+          session_id: 'session_id',
+          expires: 'expires',
+          data: 'data'
+      }
+  }
+}, mysqlPool);
+
+app.use(session({
+  key: 'session_cookie',
+  secret: process.env.SESSION_SECRET,
+  store: sessionStore,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+      maxAge: 86400000,
+      httpOnly: true
+  }
+}));
+
 // Rutas
 const indexRouter = require('./routes/index');
 const ventasRouter = require('./routes/ventas');
 const productosRouter = require('./routes/productos');
 const clientesRouter = require('./routes/clientes');
+const inventarioRoutes = require('./routes/inventario'); // Rutas API
+const dashboardRoutes = require('./routes/dashboard'); // Nombre correcto
+const authRoutes = require('./routes/auth');
+const clienteRoutes = require('./routes/cliente');
+const vendedorRoutes = require('./routes/vendedor');
+const gerenteRoutes = require('./routes/gerente');
+
 
 app.use('/', indexRouter);
+app.use('/dashboard', dashboardRoutes);
 app.use('/ventas', ventasRouter);
 app.use('/productos', productosRouter);
 app.use('/clientes', clientesRouter);
+app.use('/inventario', inventarioRoutes); // Rutas API
+
+app.use('/', authRoutes);
+app.use('/cliente', require('./middlewares/auth').hasRole('cliente'), clienteRoutes);
+app.use('/vendedor', require('./middlewares/auth').hasRole('vendedor'), vendedorRoutes);
+app.use('/gerente', require('./middlewares/auth').hasRole('gerente'), gerenteRoutes);
+
 
 // Manejo de errores
 app.use((req, res, next) => {
@@ -52,7 +97,7 @@ app.use((err, req, res, next) => {
 });
 
 // Iniciar servidor
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor en http://localhost:${PORT}`);
 });
