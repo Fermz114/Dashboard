@@ -28,7 +28,7 @@ app.set('layout', 'layout'); // Usa views/layout.ejs
 mysqlPool.getConnection()
   .then((conn) => {
     console.log('✅ MySQL listo');
-    conn.release(); // ¡Importante liberar la conexión!
+    conn.release(); // 
   })
   .catch(err => console.error('❌ Error MySQL:', err));
 
@@ -65,9 +65,9 @@ const indexRouter = require('./routes/index');
 const ventasRouter = require('./routes/ventas');
 const productosRouter = require('./routes/productos');
 const clientesRouter = require('./routes/clientes');
-const inventarioRoutes = require('./routes/inventario'); // Rutas API
-const dashboardRoutes = require('./routes/dashboard'); // Nombre correcto
+const dashboardRoutes = require('./routes/dashboard'); 
 const authRoutes = require('./routes/auth');
+const inventarioRoutes = require('./routes/inventario'); 
 const clienteRoutes = require('./routes/cliente');
 const vendedorRoutes = require('./routes/vendedor');
 const gerenteRoutes = require('./routes/gerente');
@@ -78,7 +78,7 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/ventas', ventasRouter);
 app.use('/productos', productosRouter);
 app.use('/clientes', clientesRouter);
-app.use('/inventario', inventarioRoutes); // Rutas API
+app.use('/inventario', inventarioRoutes);
 
 app.use('/', authRoutes);
 app.use('/cliente', require('./middlewares/auth').hasRole('cliente'), clienteRoutes);

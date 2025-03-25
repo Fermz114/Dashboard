@@ -72,56 +72,6 @@ router.get('/', async (req, res) => {
     }
   });
 
-// Vista de inventario completo
-router.get('/inventario', async (req, res) => {
-  try {
-    const [inventario] = await mysqlPool.query(`
-      SELECT * FROM inventario_fisico ORDER BY stock ASC
-    `);
-    
-    const gameIds = inventario.map(item => item.mongo_game_id);
-    const games = await Game.find({ _id: { $in: gameIds } }).lean();
-    
-    const inventoryData = inventario.map(item => ({
-      ...item,
-      gameInfo: games.find(g => g._id.toString() === item.mongo_game_id)
-    }));
 
-    res.render('inventario', {
-      title: 'Inventario Completo',
-      inventory: inventoryData,
-      helpers: { formatCurrency }
-    });
-    
-  } catch (error) {
-    res.status(500).render('error', {
-      title: 'Error',
-      mensaje: 'Error al cargar inventario'
-    });
-  }
-});
-
-// Actualización de stock (AJAX)
-router.put('/inventario/:id', async (req, res) => {
-  try {
-    const { cantidad } = req.body;
-    
-    await mysqlPool.query(
-      'UPDATE inventario_fisico SET stock = ? WHERE id = ?',
-      [cantidad, req.params.id]
-    );
-
-    res.json({ 
-      success: true,
-      newStock: cantidad
-    });
-    
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      error: 'Error actualizando stock'
-    });
-  }
-});
 
 module.exports = router;

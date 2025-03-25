@@ -21,8 +21,8 @@
           <tbody>
             <% inventario.forEach(item => { %>
               <tr>
-                <td><%= item.titulo %></td>
-                <td><%= item.plataformas.join(', ') %></td>
+                <td><%= item.juego.titulo %></td>
+                <td><%= item.juego.plataformas.join(', ') %></td>
                 <td class="<%= item.stock < 5 ? 'text-danger fw-bold' : '' %>">
                   <%= item.stock %>
                 </td>
@@ -45,6 +45,5 @@
     </div>
   </div>
 
-  <%- include('partials/footer') %>
 </body>
 </html>
